@@ -1,0 +1,23 @@
+{
+    "brand": "Slowlytime",
+    "title": "slowlytime",
+    "douban_auth": {
+        "client_id": "0a0c3ced6899bed81e24b6c839cd3c88",
+        "client_secret": "17f97963e7c86b7d",
+        "dev_host": "http://localhost:9000/",
+        "pro_host": "http://www.slowlytime.com/",
+        "grant_type": "authorization_code"
+    },
+    "db": {
+        "host": "127.0.0.1",
+        "port": "27017",
+        "name": "slowlytime"
+    },
+
+    "mysql": {
+        "host": "localhost",
+        "user": "root",
+        "password": "Passw0rd",
+        "database": "slowlytime"
+    }
+}
