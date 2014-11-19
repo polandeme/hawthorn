@@ -7,7 +7,7 @@ router = express.Router()
 router.get '/',(req,res) ->
   res.json 'test'
 
-router.get '/v1/get/books',(req,res) ->
+router.get '/v1/books/list',(req,res) ->
   book = new Book req.query
   book.search (err,data) ->
     if not err?
