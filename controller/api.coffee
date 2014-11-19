@@ -1,3 +1,4 @@
+setting = require '../setting'
 request = require 'request'
 Book = require '../lib/book'
 oauth = require '../lib/oauth'
@@ -13,5 +14,7 @@ router.get '/v1/books/list',(req,res) ->
     if not err?
       res.json data.books
 
+router.get '/oauth/douban',(req,res)->
+  res.redirect 'https://www.douban.com/service/auth2/auth?response_type=code&client_id='+setting.douban_auth.client_id+'&redirect_uri='+setting.douban_auth.dev_host+'user/douban/callback'
 
 module.exports = router
