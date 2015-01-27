@@ -25,6 +25,10 @@
         res.json data
 
   router.get '/oauth/douban',(req,res)->
-    res.redirect 'https://www.douban.com/service/auth2/auth?response_type=code&client_id='+setting.douban_auth.client_id+'&redirect_uri='+setting.douban_auth.dev_host+'user/douban/callback'
+    res.redirect 'https://www.douban.com/service/auth2/auth?response_type=
+    code&client_id='
+    +setting.douban_auth.client_id+
+    '&redirect_uri='+setting.douban_auth.dev_host+
+    'user/douban/callback'
 
   module.exports = router
