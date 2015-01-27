@@ -1,17 +1,22 @@
-setting = require '../setting'
-mysql = require 'mysql'
+setting = require('../setting')
+Sequelize = require('sequelize')
+fs = require('fs')
+path = require('path')
+db = {}
 
-mysqlPool = null
+sequelize = new Sequelize setting.mysql.database,
+    setting.mysql.user,
+    setting.mysql.password,
 
-initMysql = () ->
-    mysqlPool = mysql.createPool setting.mysql
+fs.
+    readdirSync(path.join(__dirname,'..','model'))
+    .forEach (file) ->
+        model = sequelize['import'](path.join(__dirname,'../model/',file))
+        db[model.name] = model
 
-exports.query = (sql, params, next) ->
+Object.keys(db).forEach (modelName)->
+    db[modelName].associate(db) if 'associate' in db[modelName]
 
-    initMysql() if not mysqlPool
-    next 'sql is null', null if not sql
-    mysqlPool.getConnection (err, connection) ->
-        throw err if err
-        connection.query sql, params, (err, rows)->
-            connection.release()
-            return next err, rows
+db.sequelize = sequelize
+
+module.exports = db
