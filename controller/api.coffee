@@ -2,18 +2,30 @@
   request = require 'request'
   Book = require '../lib/book'
   oauth = require '../lib/oauth'
-  express = require('express')
+  express = require 'express'
+  bodyParser = require 'body-parser'
+  crypto = require 'crypto'
   router = express.Router()
 
-  router.get '/',(req,res) ->
+  router.get '/',(req, res) ->
     res.json 'test'
 
-  router.get '/v1/books/list',(req,res) ->
+  router.get '/v1/books/list',(req, res) ->
     book = new Book req.query
     book.search (err,data) ->
       if not err?
         res.json data.books
+  #
+  # register
+  #
 
+  router.post '/v1/register', bodyParser(), (req, res) ->
+    sha1 = crypto.createHash 'sha1'
+    body = req.body
+    user =
+      loginName: body.loginName
+      password: sha1.update(body.password).digest 'hex'
+      createdAt: new Date() - 0
   #
   # book api
   #
