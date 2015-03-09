@@ -20,21 +20,43 @@
   router.post '/v1/register', bodyParser(), (req, res) ->
     sha1 = crypto.createHash 'sha1'
     body = req.body
+    response =
+      msg: ''
+      success: false
 
     if body.loginName == '' or body.password == ''
-      res.json 'INVALID_USER'
+      response = 
+        msg: 'INVALID_USER'
+        success: false
+      res.json response
     else if body.password.length < 6
-      res.json 'PASSWORD_LENGTH'
+      response = 
+        msg: 'PASSWORD_LENGTH'
+        success: false
+      res.json response
     else if body.loginName.length < 4
-      res.json 'PASSWORD_LENGTH'
+      response = 
+        msg:'LOGINNAME_LENGTH'
+        success: false
+      res.json response
     else
-      user =
-        loginName: body.loginName
-        password: sha1.update(body.password).digest 'hex'
-        createdAt: new Date() - 0
-      models.User.create(user)
-        .then (user)->
-          res.json 'SUCCESS'
+      checkUserExist body, (bool) ->
+        if !bool
+          user =
+            loginName: body.loginName
+            password: sha1.update(body.password).digest 'hex'
+            createdAt: new Date() - 0
+          models.User.create(user)
+            .then (user)->
+             response = 
+              msg:''
+              success: true
+             res.json response
+        else
+          response =
+            msg: 'USER_EXIST'
+            success: false
+          res.json response
 
   # 
   # book api
@@ -54,3 +76,15 @@
     'user/douban/callback'
 
   module.exports = router
+
+
+  checkUserExist = (user, next)->
+    models.User.find(
+      where:
+        loginName: user.loginName
+    )
+      .then (u)->
+        if u && u.get('loginName')
+          next true
+        else
+          next false
