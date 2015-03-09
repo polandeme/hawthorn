@@ -9,9 +9,11 @@ sequelize = new Sequelize setting.mysql.database,
   setting.mysql.password,
 
 fs.
-  readdirSync(path.join(__dirname,'..','model'))
+  readdirSync(__dirname)
+  .filter (file) ->
+    return (file.indexOf('.') != 0) && (file != 'index.coffee');
   .forEach (file) ->
-    model = sequelize['import'](path.join(__dirname,'../model/',file))
+    model = sequelize['import'](path.join(__dirname,file))
     db[model.name] = model
 
 Object.keys(db).forEach (modelName)->

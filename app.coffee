@@ -12,7 +12,6 @@ bodyParser = require('body-parser')
 api = require('./controller/api')
 index = require('./controller/index')
 
-db = require('./lib/mysql')
 
 app = express()
 
@@ -28,7 +27,6 @@ app.use(cookieParser())
 app.use('/',index)
 app.use('/api',api)
 
-db.sequelize.sync().then ()->
-    app.listen app.get("port"), ->
-        console.log "Express server listening on port " + app.get("port")
+app.listen app.get("port"), ->
+    console.log "Express server listening on port " + app.get("port")
 
