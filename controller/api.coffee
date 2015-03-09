@@ -5,10 +5,8 @@
   express = require 'express'
   bodyParser = require 'body-parser'
   crypto = require 'crypto'
+  models = require '../model'
   router = express.Router()
-
-  router.get '/',(req, res) ->
-    res.json 'test'
 
   router.get '/v1/books/list',(req, res) ->
     book = new Book req.query
@@ -22,11 +20,23 @@
   router.post '/v1/register', bodyParser(), (req, res) ->
     sha1 = crypto.createHash 'sha1'
     body = req.body
-    user =
-      loginName: body.loginName
-      password: sha1.update(body.password).digest 'hex'
-      createdAt: new Date() - 0
-  #
+
+    if body.loginName == '' or body.password == ''
+      res.json 'INVALID_USER'
+    else if body.password.length < 6
+      res.json 'PASSWORD_LENGTH'
+    else if body.loginName.length < 4
+      res.json 'PASSWORD_LENGTH'
+    else
+      user =
+        loginName: body.loginName
+        password: sha1.update(body.password).digest 'hex'
+        createdAt: new Date() - 0
+      models.User.create(user)
+        .then (user)->
+          res.json 'SUCCESS'
+
+  # 
   # book api
   #
 
